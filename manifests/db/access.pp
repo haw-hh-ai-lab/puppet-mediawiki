@@ -22,10 +22,10 @@
 # }
 #
 class mediawiki::db::access(
-  host,
-  password,
-  user     = root,
-  provider = 'mysql'
+  $host,
+  $password,
+  $user     = root,
+  $provider = 'mysql'
 ) {
 
   Class["${provider}::server"] -> Class['mediawiki::db::access']
