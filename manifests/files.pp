@@ -26,8 +26,8 @@ define mediawiki::files (
   ) {
   file { $name:
     ensure  => link,
-    owner   => 'root',
-    group   => 'root',
+    owner   => 'apache',
+    group   => 'apache',
     mode    => '0755',
     target  => gen_target_path($target_dir, $name),
   }

@@ -94,8 +94,8 @@ define mediawiki::instance (
       # Ensure resource attributes common to all resources
       File {
         ensure => directory,
-        owner  => 'root',
-        group  => 'root',
+        owner  => 'apache',
+        group  => 'apache',
         mode   => '0755',
       }
         
