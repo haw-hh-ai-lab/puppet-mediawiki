@@ -39,12 +39,21 @@
 #
 define mediawiki::instance (
   $db_password,
-  $db_name        = $name,
-  $db_user        = "${name}_user",
-  $ip             = '*',
-  $port           = '80',
-  $server_aliases = '',
-  $ensure         = 'present'
+  $db_name              = $name,
+  $db_user              = "${name}_user",
+  $ip                   = '*',
+  $port                 = '80',
+  $server_aliases       = '',
+  $ensure               = 'present',
+  $allowHTMLEmail       = 'false',
+  $additionalMailParams = 'none',
+  $external_smtp        = false,
+  $smtp_idhost,
+  $smtp_host,
+  $smtp_port,
+  $smtp_auth,
+  $smtp_username,
+  $smtp_password,
   ) {
   
   validate_re($ensure, '^(present|absent|deleted)$',
@@ -65,6 +74,18 @@ define mediawiki::instance (
   $mediawiki_conf_dir      = $mediawiki::params::conf_dir
   $mediawiki_install_files = $mediawiki::params::installation_files
   $apache_daemon           = $mediawiki::params::apache_daemon
+
+  if $external_smtp {
+    if ! $smtp_idhost   { fail("'smtp_idhost' required when 'external_smtp' is true.") }
+    if ! $smtp_host     { fail("'smtp_host' required when 'external_smtp' is true.") }
+    if ! $smtp_port     { fail("'smtp_port' required when 'external_smtp' is true.") }
+    if ! $smtp_auth     { fail("'smtp_auth' required when 'external_smtp' is true.") }
+    if ! $smtp_username { fail("'smtp_username' required when 'external_smtp' is true.") }
+    if ! $smtp_password { fail("'smtp_password' required when 'external_smtp' is true.") }
+    $wgsmtp = "array('host' => '${smtp_host}', 'idhost' => '${smtp_idhost}', 'port' => '${smtp_port}', 'auth' => '${smtp_auth}', 'username' => '${smtp_username}', 'password' => '${smtp_password}')"
+  } else {
+    $wgsmtp = "false"
+  }
 
   # Figure out how to improve db security (manually done by
   # mysql_secure_installation)
@@ -98,10 +119,16 @@ define mediawiki::instance (
         group  => 'apache',
         mode   => '0755',
       }
-        
+
       # MediaWiki instance directory
       file { "${mediawiki_conf_dir}/${name}":
         ensure   => directory,
+      }
+
+      # MediaWiki DefaultSettings
+      file { "${mediawiki_conf_dir}/${name}/includes/DefaultSettings.php":
+        ensure  =>  present,
+        content =>  template('mediawiki/DefaultSettings.php.erb'),  
       }
 
       # Each instance needs a separate folder to upload images

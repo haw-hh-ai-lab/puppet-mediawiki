@@ -61,7 +61,7 @@ class mediawiki::params {
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php-gd', 'php-mysql', 'php-xml', 'wget', 'php-pecl-apcu', 'php-intl']
       $apache             = 'httpd'
-      $apache_user        = 'httpd'
+      $apache_user        = 'apache'
     }
     debian:  {
       $web_dir            = '/var/www'

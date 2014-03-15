@@ -25,8 +25,8 @@ describe 'mediawiki::files', :type => :define do
       should contain_file('/etc/mediawiki/dummy_instance/api.php').with(
         'ensure' => 'link',
         'path'   => '/etc/mediawiki/dummy_instance/api.php',
-        'owner'  => 'root',
-        'group'  => 'root',
+        'owner'  => 'apache',
+        'group'  => 'apache',
         'mode'   => '0755',
         'target' => '/usr/share/mediawiki/api.php'
       )
