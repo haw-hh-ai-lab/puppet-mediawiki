@@ -1,5 +1,5 @@
 name    'aimonb/nexusis_mediawiki'
-version '2.0.3'
+version '2.0.4'
 source 'https://github.com/NexusIS/puppet-mediawiki.git'
 author 'Aimon Bustardo'
 license 'GPLv3'
