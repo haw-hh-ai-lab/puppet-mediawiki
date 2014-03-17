@@ -1,7 +1,4 @@
-Puppet::Type.type(:mediawiki_extension).provide(
-:mediawiki_extensioni,
-:parent => Puppet::Type.type(:file_line).provider(:ruby)
-) do
+Puppet::Type.type(:mediawiki_extension).provide(:mediawiki_extension) do
   
   desc = "Manage Media Wiki Extensions"
 

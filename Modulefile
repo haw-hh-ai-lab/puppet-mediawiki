@@ -1,11 +1,11 @@
-name    'martasd-mediawiki'
-version '0.3.0'
-source 'git@github.com:martasd/puppet-mediawiki.git'
-author 'Martin Dluhos'
+name    'aimonb/nexusis_mediawiki'
+version '2.0.3'
+source 'https://github.com/NexusIS/puppet-mediawiki.git'
+author 'Aimon Bustardo'
 license 'GPLv3'
 summary 'Puppet module for multi-tenant Mediawiki installation.'
 description 'Deploy and manage multiple Mediawiki instances using only one installation.'
-project_page 'https://github.com/martasd/puppet-mediawiki'
+project_page 'https://github.com/NexusIS/puppet-mediawiki'
 
 ## Add more dependencies, if any:
 dependency 'puppetlabs/apache', '>= 0.4.0'
