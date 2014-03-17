@@ -39,15 +39,17 @@
 #
 define mediawiki::instance (
   $db_password,
-  $db_name              = $name,
-  $db_user              = "${name}_user",
-  $ip                   = '*',
-  $port                 = '80',
-  $server_aliases       = '',
-  $ensure               = 'present',
-  $allowHTMLEmail       = 'false',
-  $additionalMailParams = 'none',
-  $external_smtp        = false,
+  $db_name                = $name,
+  $db_user                = "${name}_user",
+  $db_prefix              = 'wk',
+  $ip                     = '*',
+  $port                   = '80',
+  $server_aliases         = '',
+  $ensure                 = 'present',
+  $allow_html_email      = 'false',
+  $additional_mail_params = 'none',
+  $logo_url               = false,
+  $external_smtp          = false,
   $smtp_idhost,
   $smtp_host,
   $smtp_port,
@@ -106,6 +108,7 @@ define mediawiki::instance (
                         --dbname ${db_name}                       \
                         --dbuser ${db_user}                       \
                         --dbpass ${db_password}                   \
+                        --db-prefix ${db_prefix}                  \
                         --confpath ${mediawiki_conf_dir}/${name}  \
                         --lang en",
         creates     => "${mediawiki_conf_dir}/${name}/LocalSettings.php",
@@ -118,6 +121,14 @@ define mediawiki::instance (
         owner  => 'apache',
         group  => 'apache',
         mode   => '0755',
+      }
+
+      # MediaWIki Custom Logo
+      if $logo_url {
+        file_line{"${name}_logo_url":
+          path  =>  "${mediawiki_conf_dir}/${name}/LocalSettings.php",
+          line  =>  "\$wgLogo = '${logo_url}';",
+        }
       }
 
       # MediaWiki instance directory
