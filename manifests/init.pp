@@ -63,17 +63,17 @@ define mediawiki::manage_extension(
   }
   File_line["${extension}_include"] ~> Service<| title == 'httpd' |>
   exec{"set_${extension}_perms":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} ${doc_root}/${instance}",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} ${doc_root}/${instance}",
     refreshonly =>  true,
     notify  =>  Exec["set_${extension}_perms_two"],
   }
   exec{"set_${extension}_perms_two":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} /etc/mediawiki/${instance}",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} /etc/mediawiki/${instance}",
     refreshonly =>  true,
     notify  =>  Exec["set_${extension}_perms_three"],
   }
   exec{"set_${extension}_perms_three":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} /var/www/html/mediawiki*",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} /var/www/html/mediawiki*",
     refreshonly =>  true
   }
 }

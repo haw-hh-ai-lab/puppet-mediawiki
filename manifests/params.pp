@@ -23,7 +23,6 @@ class mediawiki::params {
 
   $tarball_url        = 'http://releases.wikimedia.org/mediawiki/1.22/mediawiki-1.22.3.tar.gz'
   $conf_dir           = '/etc/mediawiki'
-  $apache_daemon      = '/usr/sbin/apache2'
   $installation_files = ['api.php',
                          'api.php5',
                          'docs',
@@ -60,22 +59,19 @@ class mediawiki::params {
       $web_dir            = '/var/www/html'
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php-gd', 'php-mysql', 'php-xml', 'wget', 'php-pecl-apcu', 'php-intl']
-      $apache             = 'httpd'
-      $apache_user        = 'apache'
+      $apache             = $apache::params::service_name
     }
     debian:  {
       $web_dir            = '/var/www'
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php5', 'php5-mysql', 'wget']
-      $apache             = 'apache2'
-      $apache_user        = 'www-data'
+      $apache             = $apache::params::service_name
     }
     ubuntu:  {
       $web_dir            = '/var/www'
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php5', 'php5-mysql', 'wget']
-      $apache             = 'apache2'
-      $apache_user        = 'www-data'
+      $apache             = $apache::params::service_name
     }
     default: {
       fail("Module ${module_name} is not supported on ${::operatingsystem}")
