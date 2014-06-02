@@ -120,8 +120,8 @@ class mediawiki (
   file { 'mediawiki_conf_dir':
     ensure  => 'directory',
     path    => $mediawiki::params::conf_dir,
-    owner   => 'apache',
-    group   => 'apache',
+    owner   => $apache::params::user,
+    group   => $apache::params::group,
     mode    => '0755',
     require => Package[$mediawiki::params::packages],
   }  
