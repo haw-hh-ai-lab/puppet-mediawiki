@@ -70,8 +70,9 @@ class mediawiki::params {
     ubuntu:  {
       $web_dir            = '/var/www'
       $doc_root           = "${web_dir}/wikis"
-      $packages           = ['php5', 'php5-mysql', 'wget']
+      $packages           = ['php5', 'php5-mysql', 'wget', 'php5-xcache', 'php5-gd', 'php5-intl', 'git']
       $apache             = $apache::params::service_name
+
     }
     default: {
       fail("Module ${module_name} is not supported on ${::operatingsystem}")
