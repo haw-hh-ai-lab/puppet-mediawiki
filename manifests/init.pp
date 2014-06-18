@@ -94,7 +94,8 @@ class mediawiki (
   $tarball_dir              = regsubst($tarball_url, '^.*?/(\d\.\d+).*$', '\1')
   $tarball_name             = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+.*tar\.gz)$', '\1')
   $mediawiki_dir            = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+\.\d+).*$', '\1')
-  $mediawiki_install_path   = "${web_dir}/${mediawiki_dir}"
+ # $mediawiki_install_path   = "${web_dir}/${mediawiki_dir}"
+  $mediawiki_install_path   = "/usr/lib/${mediawiki_dir}"
   
   # Specify dependencies
   Class['mysql::server'] -> Class['mediawiki']
