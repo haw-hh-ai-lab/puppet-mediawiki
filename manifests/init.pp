@@ -84,18 +84,17 @@ class mediawiki (
   $db_root_password,
   $doc_root       = $mediawiki::params::doc_root,
   $tarball_url    = $mediawiki::params::tarball_url,
+  $install_dir    = $mediawiki::params::install_dir,
   $package_ensure = 'latest',
   $max_memory     = '2048'
   ) inherits mediawiki::params {
-
-  $web_dir = $mediawiki::params::web_dir
 
   # Parse the url
   $tarball_dir              = regsubst($tarball_url, '^.*?/(\d\.\d+).*$', '\1')
   $tarball_name             = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+.*tar\.gz)$', '\1')
   $mediawiki_dir            = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+\.\d+).*$', '\1')
  # $mediawiki_install_path   = "${web_dir}/${mediawiki_dir}"
-  $mediawiki_install_path   = "/usr/lib/${mediawiki_dir}"
+  $mediawiki_install_path   = "${install_dir}/${mediawiki_dir}"
   
   # Specify dependencies
   Class['mysql::server'] -> Class['mediawiki']
@@ -129,14 +128,14 @@ class mediawiki (
   
   # Download and install MediaWiki from a tarball
   exec { "get-mediawiki":
-    cwd       => $web_dir,
+    cwd       => $install_dir,
     command   => "/usr/bin/wget ${tarball_url}",
-    creates   => "${web_dir}/${tarball_name}",
+    creates   => "${install_dir}/${tarball_name}",
     subscribe => File['mediawiki_conf_dir'],
   }
     
   exec { "unpack-mediawiki":
-    cwd       => $web_dir,
+    cwd       => $install_dir,
     command   => "/bin/tar -xvzf ${tarball_name}",
     creates   => $mediawiki_install_path,
     subscribe => Exec['get-mediawiki'],

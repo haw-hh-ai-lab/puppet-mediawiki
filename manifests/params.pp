@@ -57,18 +57,21 @@ class mediawiki::params {
   case $::operatingsystem {
     redhat, centos:  {
       $web_dir            = '/var/www/html'
+      $install_dir        = "${web_dir}"
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php-gd', 'php-mysql', 'php-xml', 'wget', 'php-pecl-apcu', 'php-intl']
       $apache             = $apache::params::service_name
     }
     debian:  {
       $web_dir            = '/var/www'
+      $install_dir        = "${web_dir}"
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php5', 'php5-mysql', 'wget']
       $apache             = $apache::params::service_name
     }
     ubuntu:  {
       $web_dir            = '/var/www'
+      $install_dir        = '/usr/lib'
       $doc_root           = "${web_dir}/wikis"
       $packages           = ['php5', 'php5-mysql', 'wget', 'php5-xcache', 'php5-gd', 'php5-intl', 'git']
       $apache             = $apache::params::service_name
