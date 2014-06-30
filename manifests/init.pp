@@ -73,7 +73,7 @@ define mediawiki::manage_extension(
     notify  =>  Exec["set_${extension}_perms_three"],
   }
   exec{"set_${extension}_perms_three":
-    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} /var/www/html/mediawiki*",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} ${mediawiki::params::install_dir}/mediawiki*",
     refreshonly =>  true
   }
 }
