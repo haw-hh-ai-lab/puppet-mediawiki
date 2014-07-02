@@ -168,8 +168,16 @@ define mediawiki::instance (
         serveradmin   => $admin_email,
         servername    => $server_name,
         vhost_name    => $ip,
+        override      => ['Limit'],
         serveraliases => $server_aliases,
         ensure        => $ensure,
+        directories   => [{path => $mediawiki_conf_dir, 'AllowOverride' => 'Limit', 
+                                                        'Options' => 'Indexes FollowSymLinks MultiViews', 
+                                                        'Require' => 'all granted'},
+                          {path => $mediawiki::mediawiki_install_path, 'AllowOverride' => 'Limit', 
+                                                        'Options' => 'Indexes FollowSymLinks MultiViews', 
+                                                        'Require' => 'all granted'}
+                         ],
       }
     }
     'deleted': {
