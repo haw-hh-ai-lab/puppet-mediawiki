@@ -171,15 +171,18 @@ define mediawiki::instance (
         override      => ['Limit'],
         serveraliases => $server_aliases,
         ensure        => $ensure,
-        directories   => [{path => $mediawiki_conf_dir, 'AllowOverride' => 'Limit', 
-                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
-                                                        'Require' => 'all granted'},
-                          {path => $mediawiki::mediawiki_install_path, 'AllowOverride' => 'Limit', 
-                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
-                                                        'Require' => 'all granted'},
-                          {path => $mediawiki::doc_root, 'AllowOverride' => 'Limit', 
-                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
-                                                        'Require' => 'all granted'}   
+        directories   => [{path => $mediawiki_conf_dir, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit',                                                          
+                                'Require' => 'all granted'},
+                          {path => $mediawiki::mediawiki_install_path, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit', 
+                                'Require' => 'all granted'},
+                          {path => $mediawiki::doc_root, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit', 
+                                'Require' => 'all granted'}   
                          ],
       }
     }
