@@ -172,11 +172,14 @@ define mediawiki::instance (
         serveraliases => $server_aliases,
         ensure        => $ensure,
         directories   => [{path => $mediawiki_conf_dir, 'AllowOverride' => 'Limit', 
-                                                        'Options' => 'Indexes FollowSymLinks MultiViews', 
+                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
                                                         'Require' => 'all granted'},
                           {path => $mediawiki::mediawiki_install_path, 'AllowOverride' => 'Limit', 
-                                                        'Options' => 'Indexes FollowSymLinks MultiViews', 
-                                                        'Require' => 'all granted'}
+                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
+                                                        'Require' => 'all granted'},
+                          {path => $mediawiki::doc_root, 'AllowOverride' => 'Limit', 
+                                                        'Options' => ['Indexes', 'FollowSymLinks', 'MultiViews'], 
+                                                        'Require' => 'all granted'}   
                          ],
       }
     }
