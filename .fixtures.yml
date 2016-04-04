@@ -1,0 +1,18 @@
+fixtures:
+  repositories:
+    stdlib:
+      repo:              "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+      branch:    '4.6.x'
+    apache:
+      repo:     'https://github.com/puppetlabs/puppetlabs-apache'
+      branch:   '1.6.x'
+    mysql:
+      repo:     'https://github.com/puppetlabs/puppetlabs-mysql'
+      branch:      '3.6.x'
+    memcached:  'https://github.com/saz/puppet-memcached'
+# transistive dependency from apache
+    concat:
+      repo:     'https://github.com/ripienaar/puppet-concat'
+      ref:      '1.1.2'
+  symlinks:
+    mediawiki: "#{source_dir}"

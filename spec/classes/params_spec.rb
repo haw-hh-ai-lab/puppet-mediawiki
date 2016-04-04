@@ -4,6 +4,8 @@ describe 'mediawiki::params', :type => :class do
 
   let(:facts) do
     {
+      # the module concat needs this. Normaly set by concat through pluginsync
+      :concat_basedir         => '/tmp/concatdir',
       :osfamily => 'Debian',
       :operatingsystem => 'Debian'
     }
@@ -11,8 +13,8 @@ describe 'mediawiki::params', :type => :class do
 
   let(:title) do
     "dummy_instance"
-  end 
-    
+  end
+
   it { should contain_mediawiki__params }
 
 end

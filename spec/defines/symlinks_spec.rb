@@ -5,11 +5,13 @@ describe 'mediawiki::symlinks', :type => :define do
   context 'using default parameters on Debian' do
     let(:facts) do
       {
+        # the module concat needs this. Normaly set by concat through pluginsync
+        :concat_basedir         => '/tmp/concatdir',
         :osfamily => 'Debian',
         :operatingsystem => 'Debian'
       }
     end
-    
+
     let(:params) do
       {
         :conf_dir      => '/etc/mediawiki',
@@ -17,11 +19,11 @@ describe 'mediawiki::symlinks', :type => :define do
         :target_dir => '/usr/share/mediawiki'
       }
     end
-    
+
     let(:title) do
       'dummy_instance'
     end
-    
+
     it {
       should contain_mediawiki__files('/etc/mediawiki/dummy_instance/api.php').with(
          'target_dir' => '/usr/share/mediawiki')
