@@ -75,7 +75,6 @@ define mediawiki::instance (
   $mediawiki_install_path  = $mediawiki::mediawiki_install_path
   $mediawiki_conf_dir      = $mediawiki::params::conf_dir
   $mediawiki_install_files = $mediawiki::params::installation_files
-  $apache_daemon           = $mediawiki::params::apache_daemon
 
   if $external_smtp {
     if ! $smtp_idhost   { fail("'smtp_idhost' required when 'external_smtp' is true.") }
@@ -118,8 +117,8 @@ define mediawiki::instance (
       # Ensure resource attributes common to all resources
       File {
         ensure => directory,
-        owner  => 'apache',
-        group  => 'apache',
+        owner  => $apache::params::user,
+        group  => $apache::params::group,
         mode   => '0755',
       }
 
@@ -145,11 +144,7 @@ define mediawiki::instance (
       # Each instance needs a separate folder to upload images
       file { "${mediawiki_conf_dir}/${name}/images":
         ensure   => directory,
-        group => $::operatingsystem ? {
-          /(?i)(redhat|centos)/ => 'apache',
-          /(?i)(debian|ubuntu)/ => 'www-data',
-          default               => undef,
-        }
+        group => $apache::params::group,
       }
       
       # Ensure that mediawiki configuration files are included in each instance.
@@ -173,8 +168,22 @@ define mediawiki::instance (
         serveradmin   => $admin_email,
         servername    => $server_name,
         vhost_name    => $ip,
+        override      => ['Limit'],
         serveraliases => $server_aliases,
         ensure        => $ensure,
+        directories   => [{path => $mediawiki_conf_dir, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit',                                                          
+                                'Require' => 'all granted'},
+                          {path => $mediawiki::mediawiki_install_path, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit', 
+                                'Require' => 'all granted'},
+                          {path => $mediawiki::doc_root, 
+                                options => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+                                'AllowOverride' => 'Limit', 
+                                'Require' => 'all granted'}   
+                         ],
       }
     }
     'deleted': {

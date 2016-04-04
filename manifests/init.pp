@@ -63,17 +63,17 @@ define mediawiki::manage_extension(
   }
   File_line["${extension}_include"] ~> Service<| title == 'httpd' |>
   exec{"set_${extension}_perms":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} ${doc_root}/${instance}",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} ${doc_root}/${instance}",
     refreshonly =>  true,
     notify  =>  Exec["set_${extension}_perms_two"],
   }
   exec{"set_${extension}_perms_two":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} /etc/mediawiki/${instance}",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} /etc/mediawiki/${instance}",
     refreshonly =>  true,
     notify  =>  Exec["set_${extension}_perms_three"],
   }
   exec{"set_${extension}_perms_three":
-    command     =>  "/bin/chown -R ${mediawiki::params::apache_user}:${mediawiki::params::apache_user} /var/www/html/mediawiki*",
+    command     =>  "/bin/chown -R ${apache::params::user}:${apache::params::user} ${mediawiki::params::install_dir}/mediawiki*",
     refreshonly =>  true
   }
 }
@@ -84,17 +84,17 @@ class mediawiki (
   $db_root_password,
   $doc_root       = $mediawiki::params::doc_root,
   $tarball_url    = $mediawiki::params::tarball_url,
+  $install_dir    = $mediawiki::params::install_dir,
   $package_ensure = 'latest',
   $max_memory     = '2048'
   ) inherits mediawiki::params {
-
-  $web_dir = $mediawiki::params::web_dir
 
   # Parse the url
   $tarball_dir              = regsubst($tarball_url, '^.*?/(\d\.\d+).*$', '\1')
   $tarball_name             = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+.*tar\.gz)$', '\1')
   $mediawiki_dir            = regsubst($tarball_url, '^.*?/(mediawiki-\d\.\d+\.\d+).*$', '\1')
-  $mediawiki_install_path   = "${web_dir}/${mediawiki_dir}"
+ # $mediawiki_install_path   = "${web_dir}/${mediawiki_dir}"
+  $mediawiki_install_path   = "${install_dir}/${mediawiki_dir}"
   
   # Specify dependencies
   Class['mysql::server'] -> Class['mediawiki']
@@ -120,22 +120,22 @@ class mediawiki (
   file { 'mediawiki_conf_dir':
     ensure  => 'directory',
     path    => $mediawiki::params::conf_dir,
-    owner   => 'apache',
-    group   => 'apache',
+    owner   => $apache::params::user,
+    group   => $apache::params::group,
     mode    => '0755',
     require => Package[$mediawiki::params::packages],
   }  
   
   # Download and install MediaWiki from a tarball
   exec { "get-mediawiki":
-    cwd       => $web_dir,
+    cwd       => $install_dir,
     command   => "/usr/bin/wget ${tarball_url}",
-    creates   => "${web_dir}/${tarball_name}",
+    creates   => "${install_dir}/${tarball_name}",
     subscribe => File['mediawiki_conf_dir'],
   }
     
   exec { "unpack-mediawiki":
-    cwd       => $web_dir,
+    cwd       => $install_dir,
     command   => "/bin/tar -xvzf ${tarball_name}",
     creates   => $mediawiki_install_path,
     subscribe => Exec['get-mediawiki'],
