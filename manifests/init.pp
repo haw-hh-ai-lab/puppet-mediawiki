@@ -69,7 +69,6 @@ class mediawiki (
     }
   }
 
-  Class['::apache'] -> Class['mediawiki']
   class { 'apache::mod::php': }
 
 
