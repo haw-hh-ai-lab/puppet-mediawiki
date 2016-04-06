@@ -13,6 +13,9 @@
 # [*tarball_url*]      - the url to fetch the mediawiki tar archive
 # [*package_ensure*]   - state of the package
 # [*max_memory*]       - a memcached memory limit
+# [*set_apache_class*] - if set to false, the apache base class will not be
+#                        configured and must be set by calling classes.
+#                        Defaults to true
 #
 # === Examples
 #
@@ -41,11 +44,12 @@ class mediawiki (
   $server_name,
   $admin_email,
   $db_root_password,
-  $doc_root       = $mediawiki::params::doc_root,
-  $tarball_url    = $mediawiki::params::tarball_url,
-  $install_dir    = $mediawiki::params::install_dir,
-  $package_ensure = 'latest',
-  $max_memory     = '2048'
+  $doc_root         = $mediawiki::params::doc_root,
+  $tarball_url      = $mediawiki::params::tarball_url,
+  $install_dir      = $mediawiki::params::install_dir,
+  $package_ensure   = 'latest',
+  $max_memory       = '2048',
+  $set_apache_class = true,
   ) inherits mediawiki::params {
 
   # Parse the url
@@ -59,9 +63,13 @@ class mediawiki (
   Class['mysql::server'] -> Class['mediawiki']
   #Class['mysql::config'] -> Class['mediawiki']
 
+  if $set_apache_class {
+    class { '::apache':
+      mpm_module => 'prefork',
+    }
+  }
 
-  include ::apache
-
+  Class['::apache'] -> Class['mediawiki']
   class { 'apache::mod::php': }
 
 
