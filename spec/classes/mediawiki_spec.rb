@@ -25,7 +25,7 @@ describe 'mediawiki', :type => :class do
 
     it {
       should contain_class('mediawiki')
-      should contain_class('apache')
+      should contain_class('apache').with_mpm_module('prefork')
       should contain_class('apache::mod::php')
       should contain_class('apache::mod::prefork')
       should contain_class('mediawiki::params')
@@ -85,6 +85,38 @@ describe 'mediawiki', :type => :class do
       )
     }
   end
+
+  # as the mod_php config would fail otherwise, just set up a mpm_module
+  # different from the one defined in manifests/init.pp
+  context 'not configuring the apache class' do
+    let(:pre_condition) do
+      'class { "apache":
+         mpm_module => "itk" }'
+    end
+    let(:facts) do
+      {
+        # the module concat needs this. Normaly set by concat through pluginsync
+        :concat_basedir         => '/tmp/concatdir',
+        :osfamily => 'Debian',
+        :operatingsystem => 'Debian',
+        :operatingsystemrelease => '6',
+        :processorcount => 1
+      }
+    end
+
+    let(:params) do
+      {
+        :set_apache_class => false,
+        :admin_email      => 'admin@puppetlabs.com',
+        :db_root_password => 'long_password',
+        :server_name      => 'www.example.com',
+      }
+    end
+
+    it { should compile }
+    it { should contain_class('apache').with('mpm_module' => 'itk') }
+  end
+
 
   # Implement additional contexts for different Ubuntu, CentOS, and RedHat.
   context 'using default parameters on Ubuntu' do

@@ -197,9 +197,9 @@ describe 'mediawiki::instance', :type => :define do
        )
 
       should contain_file('/var/www/wikis/dummy_instance').with(
-        'ensure'   => 'link',
-        'owner'    => 'www-data',
-        'group'    => 'www-data'
+        'ensure' => 'link',
+        'owner'  => 'www-data',
+        'group'  => 'www-data'
       )
 
 
