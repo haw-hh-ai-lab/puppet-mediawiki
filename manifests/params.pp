@@ -74,8 +74,16 @@ class mediawiki::params {
       $web_dir            = '/var/www'
       $install_dir        = '/usr/lib'
       $doc_root           = "${web_dir}/wikis"
-      $packages           = ['php5', 'php5-mysql', 'wget', 'php5-xcache', 'php5-gd', 'php5-intl', 'git']
       $apache             = $apache::params::service_name
+
+      case $::operatingsystemrelease {
+        '16.04': {
+          $packages = ['php7.0', 'php7.0-mysql', 'wget', 'php7.0-opcache', 'php7.0-gd', 'php7.0-intl', 'git']
+        }
+        default: {
+          $packages = ['php5', 'php5-mysql', 'wget', 'php5-xcache', 'php5-gd', 'php5-intl', 'git']
+        }
+      }
 
     }
     default: {
