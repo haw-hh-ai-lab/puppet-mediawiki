@@ -42,6 +42,7 @@ define mediawiki::instance (
   $db_name                = $name,
   $db_user                = "${name}_user",
   $db_prefix              = 'wk',
+  $server_name            = undef,
   $ip                     = '*',
   $port                   = '80',
   $server_aliases         = '',
@@ -70,11 +71,16 @@ define mediawiki::instance (
   # Make the configuration file more readable
   $admin_email             = $mediawiki::admin_email
   $db_root_password        = $mediawiki::db_root_password
-  $server_name             = $mediawiki::server_name
   $doc_root                = $mediawiki::doc_root
   $mediawiki_install_path  = $mediawiki::mediawiki_install_path
   $mediawiki_conf_dir      = $mediawiki::params::conf_dir
   $mediawiki_install_files = $mediawiki::params::installation_files
+
+  if ! $server_name {
+    $real_server_name = $mediawiki::server_name
+  } else {
+    $real_server_name = $server_name
+  }
 
   if $external_smtp {
     if ! $smtp_idhost   { fail('\'smtp_idhost\' required when \'external_smtp\' is true.') }
@@ -167,7 +173,7 @@ define mediawiki::instance (
         port          => $port,
         docroot       => $doc_root,
         serveradmin   => $admin_email,
-        servername    => $server_name,
+        servername    => $real_server_name,
         vhost_name    => $ip,
         override      => ['Limit'],
         serveraliases => $server_aliases,
