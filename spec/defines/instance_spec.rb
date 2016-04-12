@@ -132,6 +132,7 @@ describe 'mediawiki::instance', :type => :define do
         :db_user        => 'dummy_user',
         :ip             => '192.168.100.41',
         :port           => '80',
+        :server_name    => 'thewiki.example.com',
         :server_aliases => 'wiki1instance',
 
       }
@@ -208,7 +209,7 @@ describe 'mediawiki::instance', :type => :define do
         'port'         => '80',
         'docroot'      => '/var/www/wikis',
         'serveradmin'  => 'admin@puppetlabs.com',
-        'servername'    => 'www.example.com',
+        'servername'    => 'thewiki.example.com',
         'vhost_name'    => '192.168.100.41',
         'serveraliases' => 'wiki1instance',
       )
