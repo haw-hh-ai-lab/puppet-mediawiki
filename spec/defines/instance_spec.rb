@@ -24,7 +24,12 @@ describe 'mediawiki::instance', :type => :define do
         :osfamily => 'Debian',
         :operatingsystem => 'Debian',
         :operatingsystemrelease => '6',
-        :processorcount => 1
+        :processorcount => 1,
+        :ip             => '192.168.100.41',
+        :vhost_name     => '127.0.0.1',
+        :port           => '80',
+        :server_name    => 'thewiki.example.com',
+        :server_aliases => 'wiki1instance',
       }
     end
 
@@ -103,6 +108,8 @@ describe 'mediawiki::instance', :type => :define do
         'docroot'      => '/var/www/wikis',
         'serveradmin'  => 'admin@puppetlabs.com',
       )
+
+#      should contain_apache__listen('192.168.100.41:80')
     end
   end
 
@@ -216,8 +223,6 @@ describe 'mediawiki::instance', :type => :define do
         'add_listen'   => false,
         'serveraliases' => 'wiki1instance',
       )
-
-      should contain_apache__listen('192.168.100.41:80')
     end
 
     it 'should have deleted the instance' do
@@ -253,6 +258,9 @@ describe 'mediawiki::instance', :type => :define do
         'docroot'      => '/var/www/wikis',
         'ensure'       => 'absent'
       )
+
+      should_not contain_apache__listen('192.168.100.41:80')
+
     end
   end
 

@@ -195,8 +195,10 @@ define mediawiki::instance (
                           ],
       }
 
-      # set the listen value separately
-      apache::listen {"${ip}:${port}":}
+      # set the listen value separately and only once
+#      if $ensure == 'present' {
+        ensure_resource('apache::listen', "${ip}:${port}",{})
+#      }
 
     }
     'deleted': {
