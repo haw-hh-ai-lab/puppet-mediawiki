@@ -43,7 +43,8 @@ define mediawiki::instance (
   $db_user                = "${name}_user",
   $db_prefix              = 'wk',
   $server_name            = undef,
-  $ip                     = '*',
+  $vhost_name             = '*',
+  $ip                     = $::ipaddress,
   $port                   = '80',
   $server_aliases         = '',
   $ensure                 = 'present',
@@ -174,7 +175,9 @@ define mediawiki::instance (
         docroot       => $doc_root,
         serveradmin   => $admin_email,
         servername    => $real_server_name,
-        vhost_name    => $ip,
+        vhost_name    => $vhost_name,
+        ip            => $ip,
+        add_listen    => false,
         override      => ['Limit'],
         serveraliases => $server_aliases,
         directories   => [{ path            => $mediawiki_conf_dir,
@@ -191,6 +194,10 @@ define mediawiki::instance (
                             'Require'       => 'all granted'},
                           ],
       }
+
+      # set the listen value separately
+      apache::listen {"${ip}:${port}":}
+
     }
     'deleted': {
 

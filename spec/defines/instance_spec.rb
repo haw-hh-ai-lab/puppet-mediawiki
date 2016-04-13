@@ -131,6 +131,7 @@ describe 'mediawiki::instance', :type => :define do
         :db_name        => 'dummy_db',
         :db_user        => 'dummy_user',
         :ip             => '192.168.100.41',
+        :vhost_name     => '127.0.0.1',
         :port           => '80',
         :server_name    => 'thewiki.example.com',
         :server_aliases => 'wiki1instance',
@@ -209,10 +210,14 @@ describe 'mediawiki::instance', :type => :define do
         'port'         => '80',
         'docroot'      => '/var/www/wikis',
         'serveradmin'  => 'admin@puppetlabs.com',
-        'servername'    => 'thewiki.example.com',
-        'vhost_name'    => '192.168.100.41',
+        'servername'   => 'thewiki.example.com',
+        'vhost_name'   => '127.0.0.1',
+        'ip'           => '192.168.100.41',
+        'add_listen'   => false,
         'serveraliases' => 'wiki1instance',
       )
+
+      should contain_apache__listen('192.168.100.41:80')
     end
 
     it 'should have deleted the instance' do
